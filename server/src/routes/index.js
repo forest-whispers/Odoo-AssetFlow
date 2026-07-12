@@ -7,6 +7,7 @@ import allocationRouter from "../modules/allocation/allocation.routes.js";
 import maintenanceRouter from "../modules/maintenance/maintenance.routes.js";
 import resourceBookingRouter from "../modules/resourceBooking/resourceBooking.routes.js";
 import dashboardRouter from "../modules/dashboard/dashboard.routes.js";
+import analyticsRouter from "../modules/analytics/analytics.routes.js";
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.use("/allocations", allocationRouter);
 router.use("/maintenance", maintenanceRouter);
 router.use("/resource-booking", resourceBookingRouter);
 router.use("/dashboard", dashboardRouter);
+router.use("/analytics", analyticsRouter);
 
 export default router;
