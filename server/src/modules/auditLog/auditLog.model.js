@@ -22,6 +22,10 @@ const auditLogSchema = new mongoose.Schema(
                 "maintenance_approved",
                 "maintenance_rejected",
                 "maintenance_resolved",
+                "resource_created",
+                "resource_booked",
+                "resource_booking_cancelled",
+                "resource_booking_completed",
             ],
           },
 
