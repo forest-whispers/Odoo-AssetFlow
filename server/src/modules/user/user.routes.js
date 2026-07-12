@@ -53,7 +53,7 @@ router.get(
 router.get(
     "/",
     requireAuth,
-    requireRole("admin"),
+    requireRole("admin", "asset_manager", "department_head"),
     getUsersController,
 );
 

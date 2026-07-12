@@ -82,6 +82,10 @@ export default function OrganizationPage() {
   const [deptModalOpen, setDeptModalOpen] = useState(false)
   const [editingDepartment, setEditingDepartment] = useState(null)
   const [catModalOpen, setCatModalOpen] = useState(false)
+  const [userModalOpen, setUserModalOpen] = useState(false)
+  const [editingUser, setEditingUser] = useState(null)
+  const [editUserRole, setEditUserRole] = useState("")
+  const [editUserDept, setEditUserDept] = useState("")
 
   // Debounced search
   useEffect(() => {
@@ -170,8 +174,24 @@ export default function OrganizationPage() {
     })
   }
 
-  const handleRoleUpdate = (userId, newRole) => {
-    updateRoleMutation.mutate({ id: userId, role: newRole })
+  const handleOpenEditUserModal = (usr) => {
+    setEditingUser(usr)
+    setEditUserRole(usr.role)
+    setEditUserDept(usr.department?._id || usr.department || "")
+    setUserModalOpen(true)
+  }
+
+  const handleUserUpdateSubmit = (e) => {
+    e?.preventDefault()
+    updateRoleMutation.mutate({
+      id: editingUser._id,
+      role: editUserRole,
+      department: editUserDept || null
+    }, {
+      onSuccess: () => {
+        setUserModalOpen(false)
+      }
+    })
   }
 
   const handleOpenDeptModal = () => {
@@ -358,17 +378,17 @@ export default function OrganizationPage() {
                           </td>
                           <td className="p-4">{getRoleBadge(usr.role)}</td>
                           <td className="p-4 text-right">
-                            <select
-                              value={usr.role}
-                              disabled={usr._id === currUser.id}
-                              onChange={(e) => handleRoleUpdate(usr._id, e.target.value)}
-                              className="h-8 rounded-md border border-input bg-transparent px-2 py-0.5 text-[11px] font-semibold select-none shadow-2xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-40 disabled:pointer-events-none"
-                            >
-                              <option value="admin">Admin</option>
-                              <option value="asset_manager">Asset Manager</option>
-                              <option value="department_head">Department Head</option>
-                              <option value="employee">Employee</option>
-                            </select>
+                            {usr._id !== currUser.id && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleOpenEditUserModal(usr)}
+                                className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
+                                title="Edit User Assignment & Role"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -651,6 +671,80 @@ export default function OrganizationPage() {
                 <Button type="submit" disabled={createCatMutation.isPending} className="h-9 cursor-pointer text-xs font-bold">
                   {createCatMutation.isPending && <RefreshCw className="mr-2 h-4 w-4 animate-spin" />}
                   Create Category
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* User Update Dialog Form */}
+      {userModalOpen && editingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-card w-full max-w-md border rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 border-b flex justify-between items-center bg-muted/10">
+              <h3 className="font-extrabold text-base text-foreground">
+                Edit Employee Assignment
+              </h3>
+              <Button variant="ghost" size="icon" onClick={() => setUserModalOpen(false)} className="h-8 w-8 rounded-lg cursor-pointer">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <form onSubmit={handleUserUpdateSubmit} className="p-6 space-y-4">
+              <div>
+                <Label>Employee Name</Label>
+                <Input
+                  value={editingUser.name}
+                  disabled
+                  className="mt-1 h-9 bg-muted/30"
+                />
+              </div>
+
+              <div>
+                <Label>Employee Email</Label>
+                <Input
+                  value={editingUser.email}
+                  disabled
+                  className="mt-1 h-9 bg-muted/30"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="userRole">Assigned Role</Label>
+                <select
+                  id="userRole"
+                  value={editUserRole}
+                  onChange={(e) => setEditUserRole(e.target.value)}
+                  className="mt-1.5 h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-xs select-none shadow-2xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  <option value="admin">Admin</option>
+                  <option value="asset_manager">Asset Manager</option>
+                  <option value="department_head">Department Head</option>
+                  <option value="employee">Employee</option>
+                </select>
+              </div>
+
+              <div>
+                <Label htmlFor="userDept">Assigned Department (Optional)</Label>
+                <select
+                  id="userDept"
+                  value={editUserDept}
+                  onChange={(e) => setEditUserDept(e.target.value)}
+                  className="mt-1.5 h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-xs select-none shadow-2xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  <option value="">No Department Assigned</option>
+                  {departments.map((d) => (
+                    <option key={d._id} value={d._id}>{d.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="pt-4 border-t flex justify-end gap-3 bg-muted/5 -mx-6 -mb-6 p-4">
+                <Button variant="outline" type="button" onClick={() => setUserModalOpen(false)} className="h-9 cursor-pointer text-xs">
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={updateRoleMutation.isPending} className="h-9 cursor-pointer text-xs font-bold">
+                  {updateRoleMutation.isPending && <RefreshCw className="mr-2 h-4 w-4 animate-spin" />}
+                  Save Changes
                 </Button>
               </div>
             </form>

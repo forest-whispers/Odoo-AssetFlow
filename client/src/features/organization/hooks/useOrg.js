@@ -19,14 +19,14 @@ export function useUsersQuery(params) {
 export function useUpdateUserRoleMutation() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, role }) => orgApi.updateUserRole(id, role),
+    mutationFn: ({ id, role, department }) => orgApi.updateUserRole(id, { role, department }),
     onSuccess: (res) => {
-      toast.success(res.message || "User role updated successfully")
+      toast.success(res.message || "User details updated successfully")
       queryClient.invalidateQueries({ queryKey: ["org", "users"] })
       queryClient.invalidateQueries({ queryKey: ["dashboard"] })
     },
     onError: (err) => {
-      toast.error(err.response?.data?.message || err.message || "Failed to update user role")
+      toast.error(err.response?.data?.message || err.message || "Failed to update user details")
     },
   })
 }

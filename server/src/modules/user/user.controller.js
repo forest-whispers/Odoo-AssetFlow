@@ -158,11 +158,12 @@ export const updateUserRoleController = async (
 ) => {
     try {
         const { id } = req.params;
-        const { role } = req.body;
+        const { role, department } = req.body;
 
         const user = await updateUserRoleService(
             id,
             role,
+            department,
             req.user,
         );
 

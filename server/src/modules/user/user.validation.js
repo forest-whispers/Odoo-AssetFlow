@@ -40,4 +40,5 @@ export const updateUserRoleSchema = z.object({
         "department_head",
         "employee",
     ]),
+    department: z.string().nullable().optional(),
 });

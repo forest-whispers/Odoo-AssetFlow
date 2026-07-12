@@ -14,8 +14,8 @@ export const orgApi = {
     return response.data
   },
 
-  updateUserRole: async (id, role) => {
-    const response = await axiosInstance.patch(`/users/${id}/role`, { role })
+  updateUserRole: async (id, data) => {
+    const response = await axiosInstance.patch(`/users/${id}/role`, data)
     return response.data
   },
 

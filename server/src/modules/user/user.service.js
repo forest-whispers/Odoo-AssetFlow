@@ -218,6 +218,7 @@ export const getUsersService = async (
 export const updateUserRoleService = async (
     id,
     role,
+    department,
     currUser,
 ) => {
     if (currUser.id === id) {
@@ -233,6 +234,9 @@ export const updateUserRoleService = async (
     }
 
     user.role = role;
+    if (department !== undefined) {
+        user.department = department || null;
+    }
 
     await user.save();
 
