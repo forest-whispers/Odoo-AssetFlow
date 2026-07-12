@@ -11,23 +11,32 @@ const auditLogSchema = new mongoose.Schema(
         action: {
             type: String,
             required: true,
+
             enum: [
                 "asset_created",
                 "asset_updated",
                 "asset_retired",
+
                 "asset_allocated",
                 "asset_returned",
                 "asset_transferred",
+
                 "maintenance_requested",
                 "maintenance_approved",
                 "maintenance_rejected",
                 "maintenance_resolved",
+
                 "resource_created",
                 "resource_booked",
                 "resource_booking_cancelled",
                 "resource_booking_completed",
+
+                "asset_audit_created",
+                "asset_audit_started",
+                "asset_audit_item_verified",
+                "asset_audit_completed",
             ],
-          },
+        },
 
         entityType: {
             type: String,

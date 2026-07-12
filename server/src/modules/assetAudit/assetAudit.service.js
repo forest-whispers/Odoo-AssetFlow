@@ -14,6 +14,10 @@ import {
     NotFoundError,
 } from "../../utils/error.js";
 
+import {
+    createAuditLogService,
+} from "../auditLog/auditLog.service.js";
+
 
 export const createAssetAuditService = async (
     payload,
@@ -118,6 +122,18 @@ export const createAssetAuditService = async (
 
     await AssetAuditItem.insertMany(
         auditItems,
+    );
+
+    await createAuditLogService(
+        currUser.id,
+        "asset_audit_created",
+        "AssetAudit",
+        audit._id,
+        {
+            name: audit.name,
+            department: audit.department,
+            totalAssets: audit.totalAssets,
+        },
     );
 
     return audit;
@@ -283,7 +299,7 @@ export const getAssetAuditByIdService =
 
 
 export const startAssetAuditService = async (
-    auditId,
+    auditId, currUser
 ) => {
     const audit =
         await AssetAudit.findOneAndUpdate(
@@ -318,6 +334,17 @@ export const startAssetAuditService = async (
             `Audit cannot be started from status '${existing.status}'`,
         );
     }
+
+    await createAuditLogService(
+        currUser.id,
+        "asset_audit_started",
+        "AssetAudit",
+        audit._id,
+        {
+            department: audit.department,
+            totalAssets: audit.totalAssets,
+        },
+    );
 
     return audit;
 };
@@ -437,7 +464,7 @@ export const verifyAuditItemService = async (
 
 
 export const completeAssetAuditService = async (
-    auditId,
+    auditId, currUser
 ) => {
     const audit = await AssetAudit.findById(
         auditId,
@@ -491,6 +518,20 @@ export const completeAssetAuditService = async (
     audit.completedAt = new Date();
 
     await audit.save();
+
+    await createAuditLogService(
+        currUser.id,
+        "asset_audit_completed",
+        "AssetAudit",
+        audit._id,
+        {
+            department: audit.department,
+            totalAssets: audit.totalAssets,
+            verifiedAssets: audit.verifiedAssets,
+            discrepancyCount:
+                audit.discrepancyCount,
+        },
+    );
 
     return {
         audit,

@@ -96,19 +96,8 @@ const getAnalyticsScope = async (currUser) => {
 const retirementAgeThreshold = new Date();
 
 retirementAgeThreshold.setFullYear(
-    now.getFullYear() - 4,
+    retirementAgeThreshold.getFullYear() - 4
 );
-
-const bookingFilter = {
-    status: {
-        $in: ["booked", "completed"],
-    },
-
-    createdAt: {
-        $gte: startDate,
-        $lte: endDate,
-    },
-};
 
 
 export const getAnalyticsService = async (
@@ -154,6 +143,10 @@ export const getAnalyticsService = async (
     };
 
     const bookingFilter = {
+        status: {
+            $in: ["booked", "completed"],
+        },
+
         createdAt: {
             $gte: startDate,
             $lte: endDate,

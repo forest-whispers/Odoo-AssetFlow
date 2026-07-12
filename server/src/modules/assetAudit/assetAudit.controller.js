@@ -85,6 +85,7 @@ export const startAssetAuditController = async (
         const audit =
             await startAssetAuditService(
                 req.params.id,
+                req.user
             );
 
         res.status(200).json({
@@ -134,6 +135,7 @@ export const completeAssetAuditController = async (
         const result =
             await completeAssetAuditService(
                 req.params.id,
+                req.user
             );
 
         res.status(200).json({
