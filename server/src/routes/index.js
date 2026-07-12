@@ -4,6 +4,7 @@ import departmentRouter from "../modules/department/department.routes.js";
 import assetCategoryRouter from "../modules/assetCategory/assetCategory.routes.js";
 import assetRouter from "../modules/asset/asset.routes.js";
 import allocationRouter from "../modules/allocation/allocation.routes.js";
+import maintenanceRouter from "../modules/maintenance/maintenance.routes.js";
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use("/departments", departmentRouter);
 router.use("/asset-categories", assetCategoryRouter);
 router.use("/assets", allocationRouter);
 router.use("/allocations", allocationRouter);
+router.use("/maintenance", maintenanceRouter,);
 
 export default router;

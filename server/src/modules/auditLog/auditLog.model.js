@@ -18,6 +18,10 @@ const auditLogSchema = new mongoose.Schema(
                 "asset_allocated",
                 "asset_returned",
                 "asset_transferred",
+                "maintenance_requested",
+                "maintenance_approved",
+                "maintenance_rejected",
+                "maintenance_resolved",
             ],
           },
 
