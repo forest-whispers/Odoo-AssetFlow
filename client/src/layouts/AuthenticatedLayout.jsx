@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useTheme } from "../providers/ThemeProvider"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import {
   LayoutDashboard,
   Users,
@@ -22,12 +23,14 @@ import {
   X,
   Sun,
   Moon,
-  SettingsIcon
+  SettingsIcon,
+  Bell
 } from "lucide-react"
 import { authApi } from "../features/auth/api/authApi"
 import { clearAuth } from "../store/authSlice"
 import { toast } from "sonner"
 import Logo from "@/components/ui/Logo"
+import { useNotificationsUnreadCountQuery } from "../features/notifications/hooks/useNotifications"
 
 const NAV_ITEMS = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard, roles: ["admin", "asset_manager", "department_head", "employee"] },
@@ -38,7 +41,8 @@ const NAV_ITEMS = [
   { label: "Maintenance", path: "/maintenance", icon: Wrench, roles: ["admin", "asset_manager", "department_head", "employee"] },
   { label: "Audit", path: "/asset-audits", icon: ClipboardCheck, roles: ["admin", "asset_manager", "department_head"] },
   { label: "Reports", path: "/analytics", icon: TrendingUp, roles: ["admin", "asset_manager", "department_head"] },
-  { label: "Activity Logs", path: "/audit-logs", icon: History, roles: ["admin", "asset_manager"] }
+  { label: "Activity Logs", path: "/audit-logs", icon: History, roles: ["admin", "asset_manager"] },
+  { label: "Notifications", path: "/notifications", icon: Bell, roles: ["admin", "asset_manager", "department_head", "employee"] }
 ]
 
 export default function AuthenticatedLayout() {
@@ -48,6 +52,9 @@ export default function AuthenticatedLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  const { data: unreadData } = useNotificationsUnreadCountQuery()
+  const unreadCount = unreadData?.data?.count || 0
 
   // Close dropdown on Escape key
   useEffect(() => {
@@ -169,7 +176,12 @@ export default function AuthenticatedLayout() {
                   onClick={() => setSidebarOpen(false)}
                 >
                   <ItemIcon className="h-4.5 w-4.5 shrink-0" />
-                  <span>{item.label}</span>
+                  <span className="flex-1 text-left">{item.label}</span>
+                  {item.label === "Notifications" && unreadCount > 0 && (
+                    <Badge variant="destructive" className="ml-auto font-extrabold text-[9px] h-4.5 min-w-4.5 rounded-full px-1.5 flex items-center justify-center">
+                      {unreadCount}
+                    </Badge>
+                  )}
                 </Link>
               )
             })}

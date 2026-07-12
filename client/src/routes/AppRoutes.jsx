@@ -17,6 +17,7 @@ import OrganizationPage from "../features/organization/pages/OrganizationPage"
 import AssetAuditPage from "../features/assetAudit/pages/AssetAuditPage"
 import AnalyticsPage from "../features/analytics/pages/AnalyticsPage"
 import ActivityLogsPage from "../features/activityLogs/pages/ActivityLogsPage"
+import NotificationsPage from "../features/notifications/pages/NotificationsPage"
 
 export default function AppRoutes() {
   return (
@@ -117,6 +118,14 @@ export default function AppRoutes() {
             element={
               <ProtectedRoute allowedRoles={["admin", "asset_manager"]}>
                 <ActivityLogsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "asset_manager", "department_head", "employee"]}>
+                <NotificationsPage />
               </ProtectedRoute>
             }
           />

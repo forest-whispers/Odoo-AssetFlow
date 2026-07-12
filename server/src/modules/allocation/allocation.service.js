@@ -5,6 +5,7 @@ import Asset from "../asset/asset.model.js";
 import User from "../user/user.model.js";
 
 import { createAuditLogService } from "../auditLog/auditLog.service.js";
+import { createNotificationService } from "../notification/notification.service.js";
 
 import {
     BadRequestError,
@@ -126,6 +127,15 @@ export const createAllocationService = async (
                 department: employee.department,
             },
         );
+
+        await createNotificationService({
+            recipient: employee._id,
+            type: "allocation",
+            title: "Asset Allocated",
+            message: `Asset ${asset.assetTag} - ${asset.name} has been allocated to you.`,
+            entityType: "allocation",
+            entityId: allocation._id
+        });
 
         return allocation;
     } catch (error) {
@@ -500,6 +510,18 @@ export const transferAssetService = async (
                     newEmployee.department,
             },
         );
+
+        const assetDoc = await Asset.findById(claimedAllocation.asset).select("assetTag name").lean();
+        const assetInfo = assetDoc ? `${assetDoc.assetTag} - ${assetDoc.name}` : "An asset";
+
+        await createNotificationService({
+            recipient: newEmployee._id,
+            type: "transfer",
+            title: "Asset Transferred to You",
+            message: `Asset ${assetInfo} has been transferred to you.`,
+            entityType: "allocation",
+            entityId: newAllocation._id
+        });
 
         return newAllocation;
     } catch (error) {

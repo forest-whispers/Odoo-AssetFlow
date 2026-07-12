@@ -3,6 +3,7 @@ import ResourceBooking from "./resourceBooking.model.js";
 import User from  "../user/user.model.js";
 
 import { createAuditLogService } from "../auditLog/auditLog.service.js";
+import { createNotificationService } from "../notification/notification.service.js";
 
 import {
     BadRequestError,
@@ -194,6 +195,15 @@ export const createBookingService = async (
             endTime: end,
         },
     );
+
+    await createNotificationService({
+        recipient: currUser.id,
+        type: "booking",
+        title: "Booking Confirmed",
+        message: `Booking confirmed for ${resource.name} from ${start.toLocaleString()} to ${end.toLocaleString()}.`,
+        entityType: "resource_booking",
+        entityId: booking._id
+    });
 
     return booking;
 };

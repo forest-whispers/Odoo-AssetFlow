@@ -10,6 +10,7 @@ import dashboardRouter from "../modules/dashboard/dashboard.routes.js";
 import analyticsRouter from "../modules/analytics/analytics.routes.js";
 import assetAuditRouter from "../modules/assetAudit/assetAudit.routes.js";
 import auditLogRouter from "../modules/auditLog/auditLog.routes.js";
+import notificationRouter from "../modules/notification/notification.routes.js";
 
 const router = express.Router();
 
@@ -31,5 +32,6 @@ router.use("/dashboard", dashboardRouter);
 router.use("/analytics", analyticsRouter);
 router.use("/asset-audits", assetAuditRouter);
 router.use("/audit-logs", auditLogRouter);
+router.use("/notifications", notificationRouter);
 
 export default router;

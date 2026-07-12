@@ -3,6 +3,7 @@ import Asset from "../asset/asset.model.js";
 import Allocation from "../allocation/allocation.model.js";
 
 import { createAuditLogService } from "../auditLog/auditLog.service.js";
+import { createNotificationService, notifyRolesService } from "../notification/notification.service.js";
 
 import {
     BadRequestError,
@@ -98,6 +99,15 @@ export const createMaintenanceService = async (
                     maintenance.issueType,
             },
         );
+
+        await notifyRolesService({
+            roles: ["admin", "asset_manager"],
+            type: "maintenance",
+            title: "New Maintenance Request",
+            message: `New maintenance request submitted for asset ${asset.assetTag} (${asset.name}).`,
+            entityType: "maintenance",
+            entityId: maintenance._id
+        });
 
         return maintenance;
     } catch (error) {
@@ -393,6 +403,15 @@ export const approveMaintenanceService = async (
         },
     );
 
+    await createNotificationService({
+        recipient: updatedMaintenance.reportedBy,
+        type: "approval",
+        title: "Maintenance Request Approved",
+        message: `Your maintenance request for asset ${asset.assetTag} (${asset.name}) has been approved and is now in progress.`,
+        entityType: "maintenance",
+        entityId: updatedMaintenance._id
+    });
+
     return updatedMaintenance;
 };
 
@@ -453,6 +472,18 @@ export const rejectMaintenanceService = async (
             reason,
         },
     );
+
+    const rejectedAsset = await Asset.findById(maintenance.asset).select("assetTag name").lean();
+    const assetInfo = rejectedAsset ? `${rejectedAsset.assetTag} (${rejectedAsset.name})` : "your asset";
+
+    await createNotificationService({
+        recipient: maintenance.reportedBy,
+        type: "approval",
+        title: "Maintenance Request Rejected",
+        message: `Your maintenance request for asset ${assetInfo} has been rejected. Reason: ${reason}`,
+        entityType: "maintenance",
+        entityId: maintenance._id
+    });
 
     return maintenance;
 };
@@ -566,6 +597,15 @@ export const resolveMaintenanceService = async (
             condition: asset.condition,
         },
     );
+
+    await createNotificationService({
+        recipient: maintenance.reportedBy,
+        type: "approval",
+        title: "Maintenance Completed",
+        message: `Maintenance breakdown request resolved for asset ${asset.assetTag} (${asset.name}). Notes: ${resolutionNotes}`,
+        entityType: "maintenance",
+        entityId: maintenance._id
+    });
 
     return {
         maintenanceId: maintenance._id,

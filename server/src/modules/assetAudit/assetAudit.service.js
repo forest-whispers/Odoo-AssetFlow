@@ -17,6 +17,10 @@ import {
 import {
     createAuditLogService,
 } from "../auditLog/auditLog.service.js";
+import {
+    createNotificationService,
+    notifyRolesService,
+} from "../notification/notification.service.js";
 
 
 export const createAssetAuditService = async (
@@ -459,6 +463,19 @@ export const verifyAuditItemService = async (
         );
     }
 
+    if (isDiscrepancy) {
+        const assetObj = await Asset.findById(item.asset).select("assetTag").lean();
+        const assetTag = assetObj ? assetObj.assetTag : "N/A";
+        await notifyRolesService({
+            roles: ["admin", "asset_manager"],
+            type: "audit",
+            title: "Audit Discrepancy Detected",
+            message: `Audit discrepancy detected: Asset ${assetTag} marked as ${payload.verificationStatus}.`,
+            entityType: "asset_audit",
+            entityId: auditId
+        });
+    }
+
     return item;
 };
 
@@ -532,6 +549,22 @@ export const completeAssetAuditService = async (
                 audit.discrepancyCount,
         },
     );
+
+    try {
+        const dept = await Department.findById(audit.department).lean();
+        if (dept && dept.head) {
+            await createNotificationService({
+                recipient: dept.head,
+                type: "audit",
+                title: "Department Audit Completed",
+                message: `The audit cycle for department '${dept.name}' has been completed.`,
+                entityType: "asset_audit",
+                entityId: audit._id
+            });
+        }
+    } catch (err) {
+        console.error("Failed to notify Department Head about audit completion:", err);
+    }
 
     return {
         audit,
