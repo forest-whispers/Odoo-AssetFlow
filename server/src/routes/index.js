@@ -9,6 +9,7 @@ import resourceBookingRouter from "../modules/resourceBooking/resourceBooking.ro
 import dashboardRouter from "../modules/dashboard/dashboard.routes.js";
 import analyticsRouter from "../modules/analytics/analytics.routes.js";
 import assetAuditRouter from "../modules/assetAudit/assetAudit.routes.js";
+import auditLogRouter from "../modules/auditLog/auditLog.routes.js";
 
 const router = express.Router();
 
@@ -22,12 +23,13 @@ router.get("/", (req, res) => {
 router.use("/users", userRoutes);
 router.use("/departments", departmentRouter);
 router.use("/asset-categories", assetCategoryRouter);
-router.use("/assets", allocationRouter);
+router.use("/assets", assetRouter);
 router.use("/allocations", allocationRouter);
 router.use("/maintenance", maintenanceRouter);
 router.use("/resource-booking", resourceBookingRouter);
 router.use("/dashboard", dashboardRouter);
 router.use("/analytics", analyticsRouter);
 router.use("/asset-audits", assetAuditRouter);
+router.use("/audit-logs", auditLogRouter);
 
 export default router;

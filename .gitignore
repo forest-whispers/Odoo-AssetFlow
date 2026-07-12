@@ -2,8 +2,6 @@ dist
 dist-ssr
 *.local
 
-client/
-/server/src/modules-/
 ## Dependency directories (These are massive; never push them)
 node_modules/
 /client/node_modules/

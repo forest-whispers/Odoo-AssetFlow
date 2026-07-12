@@ -40,14 +40,16 @@ export const createUserService = async ({
         10,
     );
 
+    const userCount = await User.countDocuments({});
+    const role = userCount === 0 ? "admin" : "employee";
+
     const user = await User.create({
         name,
         email,
         password: hashedPassword,
 
-        // Public registration can never create
-        // privileged accounts.
-        role: "employee",
+        // First registered user gets admin; others default to employee.
+        role,
 
         employeeId,
         jobTitle,

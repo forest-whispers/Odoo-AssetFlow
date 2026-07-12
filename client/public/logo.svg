@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="100%">
+  <defs>
+    <!-- Soft Premium SaaS Gradient -->
+    <linearGradient id="brand-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1E40AF" />    <!-- Navy Blue -->
+      <stop offset="35%" stop-color="#2563EB" />   <!-- Royal Blue -->
+      <stop offset="75%" stop-color="#0EA5E9" />   <!-- Sky Blue -->
+      <stop offset="100%" stop-color="#38BDF8" />  <!-- Soft Sky/Cyan -->
+    </linearGradient>
+
+    <!-- Transparent Mask for Interlocking Crossover -->
+    <mask id="crossover-mask">
+      <rect x="-150" y="-150" width="300" height="300" fill="white" />
+      <path d="M -30 15 C -20 12, -10 6, 0 0 C 10 -6, 20 -12, 30 -15" stroke="black" stroke-width="18" stroke-linecap="round" fill="none" />
+    </mask>
+  </defs>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&amp;display=swap');
+    .brand-font {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .pulse-text {
+      fill: #111827;
+    }
+    @media (prefers-color-scheme: dark) {
+      .pulse-text {
+        fill: #F9FAFB;
+      }
+    }
+  </style>
+
+  <!-- Icon Group (Scaled to 0.7, Centered vertically at Y=40, X=48) -->
+  <g transform="translate(48, 40) scale(0.7)">
+    <!-- Left Stem -->
+    <path d="M -57.5 45 L -57.5 -45" stroke="url(#brand-grad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <!-- Left Bowl -->
+    <path d="M -57.5 -22.5 C -35 -22.5, -15 -10, 0 0 C -15 10, -35 22.5, -57.5 22.5" stroke="url(#brand-grad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <!-- Right Loop (Masked for crossover depth) -->
+    <path d="M 0 0 C 15 10, 35 22.5, 35 22.5 C 50 22.5, 57.5 15, 57.5 0 C 57.5 -15, 50 -22.5, 35 -22.5" stroke="url(#brand-grad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" mask="url(#crossover-mask)" />
+    <!-- Crossover Line & Top Arm of F -->
+    <path d="M -57.5 22.5 C -35 22.5, -20 12, 0 0 C 20 -12, 35 -22.5, 35 -22.5 L 65 -22.5" stroke="url(#brand-grad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <!-- Middle Arm of F -->
+    <path d="M 15 0 L 45 0" stroke="url(#brand-grad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  </g>
+
+  <!-- Wordmark "PulseFlow" -->
+  <text x="108" y="49" class="brand-font" font-size="30" font-weight="800" letter-spacing="-0.03em">
+    <tspan class="pulse-text">Pulse</tspan><tspan fill="url(#brand-grad)">Flow</tspan>
+  </text>
+</svg>
