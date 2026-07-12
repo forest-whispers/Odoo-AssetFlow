@@ -8,6 +8,7 @@ import maintenanceRouter from "../modules/maintenance/maintenance.routes.js";
 import resourceBookingRouter from "../modules/resourceBooking/resourceBooking.routes.js";
 import dashboardRouter from "../modules/dashboard/dashboard.routes.js";
 import analyticsRouter from "../modules/analytics/analytics.routes.js";
+import assetAuditRouter from "../modules/assetAudit/assetAudit.routes.js";
 
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.use("/maintenance", maintenanceRouter);
 router.use("/resource-booking", resourceBookingRouter);
 router.use("/dashboard", dashboardRouter);
 router.use("/analytics", analyticsRouter);
+router.use("/asset-audits", assetAuditRouter);
 
 export default router;
